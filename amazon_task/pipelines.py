@@ -14,4 +14,6 @@ class AmazonTaskPipeline(object):
             discount_percentage = (discount_amount * 100.00) / float(item.get('price'))
             discount_percentage = format(discount_percentage, '.2f') 
             item['discount_percentage'] = discount_percentage
+        else:
+            item['discount_percentage'] = None
         return item
