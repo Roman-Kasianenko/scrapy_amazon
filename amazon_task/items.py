@@ -12,5 +12,6 @@ class AmazonTaskItem(scrapy.Item):
     # define the fields for your item here like:
     title = scrapy.Field()
     price = scrapy.Field()
+    brand = scrapy.Field()
     discounted_price = scrapy.Field()
     discount_percentage = scrapy.Field()

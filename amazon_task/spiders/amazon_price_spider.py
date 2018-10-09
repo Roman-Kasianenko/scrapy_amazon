@@ -9,10 +9,11 @@ class AmazonPriceSpiderSpider(scrapy.Spider):
         'https://www.amazon.com/dp/B011L4D3BG']
 
     def parse(self, response):
-        is_screenshot_needed = self.make_screenshoot
+        if hasattr(self, 'make_screenshoot'):
+            is_screenshot_needed = self.make_screenshoot
 
-        if is_screenshot_needed:
-            print('Save screenshoot !')
+            if is_screenshot_needed:
+                print('Save screenshoot !')
 
         title = response.css('span#productTitle::text').extract_first()
         promo = response.xpath('//input[@data-discounted-price]')
@@ -32,9 +33,18 @@ class AmazonPriceSpiderSpider(scrapy.Spider):
         if not price:
             price = self.get_price(response)
 
+        brand = response.xpath('//*[@data-brand]')
+        if brand:
+            brand = brand.css('::attr(data-brand)').extract_first()
+        else:
+            brand = response.css('a#bylineInfo::text')
+            if brand:
+                brand = brand.extract_first().split('by')[1].strip()
+
         item = AmazonTaskItem()
         item['title'] = title
         item['price'] = price
+        item['brand'] = brand
         item['discounted_price'] = discounted_price
 
         yield item
